@@ -14,6 +14,7 @@ interface AuthConfig {
   jwtExpiresIn?: string | number;
   host?: string;
   basePath?: string;
+  setCookieString?: string;
 }
 
 interface AuthCallbacks {
@@ -125,11 +126,14 @@ export class Auth {
 
     const jwt = this.signToken(token);
     const redirect = await this.getRedirectUrl(host, redirectUrl ?? undefined);
+    const cookie = this.config?.setCookieString
+      ? `svelteauthjwt=${jwt}; ${this.config.setCookieString}`
+      : `svelteauthjwt=${jwt}; Path=/; HttpOnly`;
 
     return {
       status: 302,
       headers: {
-        "set-cookie": `svelteauthjwt=${jwt}; Path=/; HttpOnly`,
+        "set-cookie": cookie,
         Location: redirect,
       },
     };
