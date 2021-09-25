@@ -5,6 +5,12 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./client": "./dist/client/index.js",
+    "./providers": "./dist/providers/index.js",
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "rollup --config",
     "dev": "rollup --config --watch",
