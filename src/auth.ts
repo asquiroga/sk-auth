@@ -147,9 +147,13 @@ export class Auth {
       const jwt = this.signToken(token);
 
       if (method === "POST") {
+        const cookie = this.config?.setCookieString
+          ? `svelteauthjwt=${jwt}; ${this.config.setCookieString}`
+          : `svelteauthjwt=${jwt}; Path=/; HttpOnly`;
+
         return {
           headers: {
-            "set-cookie": `svelteauthjwt=${jwt}; Path=/; HttpOnly`,
+            "set-cookie": cookie,
           },
           body: {
             signout: true,
