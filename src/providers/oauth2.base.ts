@@ -1,4 +1,3 @@
-import type { EndpointOutput, ServerRequest } from "@sveltejs/kit/types/endpoint";
 import type { Auth } from "../auth";
 import type { CallbackResult } from "../types";
 import { Provider, ProviderConfig } from "./base";
@@ -24,7 +23,7 @@ export abstract class OAuth2BaseProvider<
   T extends OAuth2BaseProviderConfig,
 > extends Provider<T> {
   abstract getAuthorizationUrl(
-    request: ServerRequest,
+    request: any,
     auth: Auth,
     state: string,
     nonce: string,
@@ -32,7 +31,7 @@ export abstract class OAuth2BaseProvider<
   abstract getTokens(code: string, redirectUri: string): TokensType | Promise<TokensType>;
   abstract getUserProfile(tokens: any): ProfileType | Promise<ProfileType>;
 
-  async signin(request: ServerRequest, auth: Auth): Promise<EndpointOutput> {
+  async signin(request: any, auth: Auth): Promise<any> {
     const { method, host, query } = request;
     const state = [`redirect=${query.get("redirect") ?? this.getUri(auth, "/", host)}`].join(",");
     const base64State = Buffer.from(state).toString("base64");
@@ -65,7 +64,7 @@ export abstract class OAuth2BaseProvider<
     }
   }
 
-  async callback({ query, host }: ServerRequest, auth: Auth): Promise<CallbackResult> {
+  async callback({ query, host }: any, auth: Auth): Promise<CallbackResult> {
     const code = query.get("code");
     const redirect = this.getStateValue(query, "redirect");
 

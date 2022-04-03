@@ -1,6 +1,4 @@
 import type { GetSession, RequestHandler } from "@sveltejs/kit";
-import type { EndpointOutput, ServerRequest } from "@sveltejs/kit/types/endpoint";
-import type { Headers } from "@sveltejs/kit/types/helper";
 import cookie from "cookie";
 import * as jsonwebtoken from "jsonwebtoken";
 import type { JWT, Session } from "./interfaces";
@@ -44,7 +42,7 @@ export class Auth {
     return "svelte_auth_secret";
   }
 
-  async getToken(headers: Headers) {
+  async getToken(headers: any) {
     if (!headers.cookie) {
       return null;
     }
@@ -111,9 +109,9 @@ export class Auth {
   }
 
   async handleProviderCallback(
-    request: ServerRequest,
+    request: any,
     provider: Provider,
-  ): Promise<EndpointOutput> {
+  ): Promise<any> {
     const { headers, host } = request;
     const [profile, redirectUrl] = await provider.callback(request, this);
 
@@ -139,7 +137,7 @@ export class Auth {
     };
   }
 
-  async handleEndpoint(request: ServerRequest): Promise<EndpointOutput> {
+  async handleEndpoint(request: any): Promise<any> {
     const { path, headers, method, host } = request;
 
     if (path === this.getPath("signout")) {
@@ -195,11 +193,11 @@ export class Auth {
   }
 
   get: RequestHandler = async (request) => {
-    const { path } = request;
+    const { url } = request;
 
-    if (path === this.getPath("csrf")) {
+    if (url.pathname === this.getPath("csrf")) {
       return { body: "1234" }; // TODO: Generate real token
-    } else if (path === this.getPath("session")) {
+    } else if (url.pathname === this.getPath("session")) {
       const session = await this.getSession(request);
       return {
         body: {
@@ -215,8 +213,8 @@ export class Auth {
     return await this.handleEndpoint(request);
   };
 
-  getSession: GetSession = async ({ headers }) => {
-    const token = await this.getToken(headers);
+  getSession: GetSession = async ({ request }) => {
+    const token = await this.getToken(request.headers);
 
     if (token) {
       if (this.config?.callbacks?.session) {

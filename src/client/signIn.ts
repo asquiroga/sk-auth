@@ -23,7 +23,7 @@ export async function signIn(provider: string, data?: any, config?: SignInConfig
   if (config?.redirectUrl) {
     redirectUrl = config.redirectUrl;
   } else {
-    let $val: Page | undefined;
+    let $val: any;
     /* page.subscribe(($) => ($val = $))(); */
     if ($val) {
       redirectUrl = `${$val.host}${$val.path}?${$val.query}`;
