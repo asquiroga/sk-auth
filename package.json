@@ -1,6 +1,6 @@
 {
   "name": "sk-auth-dynamic-cookie",
-  "version": "0.4.1",
+  "version": "0.4.11",
   "description": "Authentication library for use with SvelteKit featuring built-in OAuth providers and zero restriction customization!",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

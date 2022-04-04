@@ -138,9 +138,9 @@ export class Auth {
   }
 
   async handleEndpoint(request: any): Promise<any> {
-    const { path, headers, method, host } = request;
+    const { url, headers, method, host } = request;
 
-    if (path === this.getPath("signout")) {
+    if (url.pathname === this.getPath("signout")) {
       const token = this.setToken(headers, {});
       const jwt = this.signToken(token);
 
@@ -171,7 +171,7 @@ export class Auth {
     }
 
     const regex = new RegExp(join([this.basePath, `(?<method>signin|callback)/(?<provider>\\w+)`]));
-    const match = path.match(regex);
+    const match = url.pathname.match(regex);
 
     if (match && match.groups) {
       const provider = this.config?.providers?.find(
