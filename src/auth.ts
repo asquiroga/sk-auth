@@ -137,14 +137,14 @@ export class Auth {
     };
   }
 
-  async handleEndpoint(request: any): Promise<any> {
-    const { url, request : req, method, host } = request;
+  async handleEndpoint(event: any): Promise<any> {
+    const { url, request : req, host } = event;
 
     if (url.pathname === this.getPath("signout")) {
       const token = this.setToken(req.headers, {});
       const jwt = this.signToken(token);
 
-      if (method === "POST") {
+      if (req.method === "POST") {
         const cookie = this.config?.setCookieString
           ? `svelteauthjwt=${jwt}; ${this.config.setCookieString}`
           : `svelteauthjwt=${jwt}; Path=/; HttpOnly`;
@@ -179,9 +179,9 @@ export class Auth {
       );
       if (provider) {
         if (match.groups.method === "signin") {
-          return await provider.signin(request, this);
+          return await provider.signin(event, this);
         } else {
-          return await this.handleProviderCallback(request, provider);
+          return await this.handleProviderCallback(event, provider);
         }
       }
     }
